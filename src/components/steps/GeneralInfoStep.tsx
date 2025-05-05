@@ -43,13 +43,13 @@ const GeneralInfoStep = () => {
           <h2 className="text-xl font-semibold mb-4 text-survey-dark">I. Thông tin chung</h2>
           
           <div className="space-y-6">
-            <div className="space-y-2">
+            {/* <div className="space-y-2">
               <Label htmlFor="name">Họ và tên <span className="text-gray-500 text-sm">(Không bắt buộc – bạn có thể chọn ẩn danh)</span></Label>
               <Input id="name" placeholder="Nhập họ và tên (không bắt buộc)" value={surveyData.name} onChange={e => setSurveyData(prev => ({
               ...prev,
               name: e.target.value
             }))} className="border-gray-300" />
-            </div>
+            </div> */}
             
             <div className="space-y-2">
               <Label htmlFor="team" className="font-medium">

@@ -5,10 +5,12 @@ import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import TeamEvaluationSection from '@/components/TeamEvaluationSection';
+import { Info } from 'lucide-react';
 
 const CrossTeamEvaluationStep = () => {
-  const { surveyData, setSurveyData, nextStep, prevStep } = useSurvey();
+  const { surveyData, setSurveyData, nextStep, prevStep, validateCurrentStep } = useSurvey();
   const [activeTab, setActiveTab] = useState("dev");
+  const [showValidation, setShowValidation] = useState(false);
 
   // Update rating for a specific team
   const updateRating = (team: keyof typeof teamData, questionId: string, rating: number) => {
@@ -34,6 +36,11 @@ const CrossTeamEvaluationStep = () => {
         )
       }
     }));
+  };
+
+  const handleContinue = () => {
+    // Cross-team evaluations are optional, so we don't need to validate
+    nextStep();
   };
 
   // Map team keys to their evaluation data and titles
@@ -71,6 +78,13 @@ const CrossTeamEvaluationStep = () => {
         </CardHeader>
         
         <CardContent className="pt-6">
+          <div className="bg-blue-50 p-4 rounded-md flex items-start gap-3 mb-4">
+            <Info className="text-blue-500 mt-1 flex-shrink-0" size={18} />
+            <p className="text-blue-700 text-sm">
+              Vui lòng đánh giá các team mà bạn đã làm việc cùng. Nếu bạn chưa từng làm việc với team nào đó, bạn có thể bỏ qua.
+            </p>
+          </div>
+          
           <Tabs value={activeTab} onValueChange={setActiveTab}>
             <TabsList className="w-full grid grid-cols-5">
               <TabsTrigger value="dev">DEV</TabsTrigger>
@@ -140,7 +154,7 @@ const CrossTeamEvaluationStep = () => {
             Quay lại
           </Button>
           <Button 
-            onClick={nextStep}
+            onClick={handleContinue}
             className="bg-survey-primary hover:bg-survey-dark text-white"
           >
             Tiếp theo

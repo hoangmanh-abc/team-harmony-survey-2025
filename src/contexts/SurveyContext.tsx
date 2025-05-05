@@ -9,12 +9,14 @@ export interface RatingQuestion {
   id: string;
   text: string;
   rating: number | null;
+  required?: boolean;
 }
 
 export interface OpenQuestion {
   id: string;
   text: string;
   answer: string;
+  required?: boolean;
 }
 
 export interface TeamEvaluation {
@@ -34,6 +36,7 @@ export interface SurveyData {
   designTeamEvaluation: TeamEvaluation;
   contentSeoTeamEvaluation: TeamEvaluation;
   wszTeamEvaluation: TeamEvaluation;
+  okrEvaluation: TeamEvaluation;
 }
 
 interface SurveyContextType {
@@ -45,6 +48,7 @@ interface SurveyContextType {
   prevStep: () => void;
   isSubmitted: boolean;
   submitSurvey: () => Promise<void>;
+  validateCurrentStep: () => { isValid: boolean; message?: string };
 }
 
 const SurveyContext = createContext<SurveyContextType>({} as SurveyContextType);
@@ -58,11 +62,11 @@ const initialSurveyData: SurveyData = {
   // Self evaluation (for single members)
   selfEvaluation: {
     ratings: [
-      { id: 'self_proactive', text: 'Tôi chủ động và bám sát mục tiêu công việc', rating: null },
-      { id: 'self_collaboration', text: 'Tôi phối hợp hiệu quả với các team khác', rating: null },
-      { id: 'self_timely_response', text: 'Tôi phản hồi và xử lý yêu cầu đúng thời hạn', rating: null },
-      { id: 'self_improvement', text: 'Tôi tìm cách cải thiện hiệu quả công việc', rating: null },
-      { id: 'self_satisfaction', text: 'Tôi hài lòng với hiệu suất làm việc của mình trong quý này', rating: null },
+      { id: 'self_proactive', text: 'Tôi chủ động và bám sát mục tiêu công việc', rating: null, required: true },
+      { id: 'self_collaboration', text: 'Tôi phối hợp hiệu quả với các team khác', rating: null, required: true },
+      { id: 'self_timely_response', text: 'Tôi phản hồi và xử lý yêu cầu đúng thời hạn', rating: null, required: true },
+      { id: 'self_improvement', text: 'Tôi tìm cách cải thiện hiệu quả công việc', rating: null, required: true },
+      { id: 'self_satisfaction', text: 'Tôi hài lòng với hiệu suất làm việc của mình trong quý này', rating: null, required: true },
     ],
     openQuestions: []
   },
@@ -156,18 +160,30 @@ const initialSurveyData: SurveyData = {
     ]
   },
   
+  // OKR evaluation
+  okrEvaluation: {
+    ratings: [
+      { id: 'okr_understanding', text: 'Tôi hiểu rõ về phương pháp OKR', rating: null, required: true },
+      { id: 'okr_team_awareness', text: 'Tôi nắm được OKR của team trong quý vừa rồi', rating: null, required: true },
+      { id: 'okr_personal', text: 'Tôi hiểu OKR cá nhân của mình và cách nó liên kết với team', rating: null, required: true },
+      { id: 'okr_process', text: 'Tôi thấy quy trình thiết lập và review OKR trong team rõ ràng, dễ hiểu', rating: null, required: true },
+      { id: 'okr_implementation', text: 'Tôi thấy việc triển khai OKR phù hợp với cách team đang vận hành', rating: null, required: true },
+    ],
+    openQuestions: []
+  },
+  
   // WSZ team evaluation
   wszTeamEvaluation: {
     ratings: [
-      { id: 'wsz_process', text: 'Bạn đánh giá ntn về quy trình làm việc của team', rating: null },
-      { id: 'wsz_meetings', text: 'Các buổi họp (Daily, Planning, Review…) có hiệu quả không', rating: null },
-      { id: 'wsz_goals', text: 'Bạn có hiểu rõ về mục tiêu trong quý này không', rating: null },
-      { id: 'wsz_product_understanding', text: 'Bạn đánh giá mức độ hiểu sản phẩm WSZ của mình ở mức nào?', rating: null },
-      { id: 'wsz_satisfaction', text: 'Mức độ hài lòng tổng thể với team WSZ', rating: null },
+      { id: 'wsz_process', text: 'Bạn đánh giá ntn về quy trình làm việc của team', rating: null, required: true },
+      { id: 'wsz_meetings', text: 'Các buổi họp (Daily, Planning, Review…) có hiệu quả không', rating: null, required: true },
+      { id: 'wsz_goals', text: 'Bạn có hiểu rõ về mục tiêu trong quý này không', rating: null, required: true },
+      { id: 'wsz_product_understanding', text: 'Bạn đánh giá mức độ hiểu sản phẩm WSZ của mình ở mức nào?', rating: null, required: true },
+      { id: 'wsz_satisfaction', text: 'Mức độ hài lòng tổng thể với team WSZ', rating: null, required: true },
     ],
     openQuestions: [
-      { id: 'wsz_process_improvements', text: 'Bạn có đề xuất gì để cải thiện quy trình làm việc giữa các team và cả team WSZ?', answer: '' },
-      { id: 'wsz_next_quarter_changes', text: 'Bạn mong muốn điều gì được thay đổi trong quý tiếp theo?', answer: '' },
+      { id: 'wsz_process_improvements', text: 'Bạn có đề xuất gì để cải thiện quy trình làm việc giữa các team và cả team WSZ?', answer: '', required: true },
+      { id: 'wsz_next_quarter_changes', text: 'Bạn mong muốn điều gì được thay đổi trong quý tiếp theo?', answer: '', required: true },
     ]
   }
 };
@@ -177,8 +193,83 @@ export const SurveyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   const [surveyData, setSurveyData] = useState<SurveyData>(initialSurveyData);
   const [isSubmitted, setIsSubmitted] = useState(false);
 
+  // Function to validate the current step and ensure required fields are filled
+  const validateCurrentStep = (): { isValid: boolean; message?: string } => {
+    switch (currentStep) {
+      case 0: // General Info step
+        if (!surveyData.team) {
+          return { isValid: false, message: 'Vui lòng chọn team của bạn' };
+        }
+        return { isValid: true };
+        
+      case 1: // Self/InTeam Evaluation
+        // Self evaluation is mandatory
+        const selfEvalRequired = surveyData.selfEvaluation.ratings
+          .filter(q => q.required)
+          .every(q => q.rating !== null);
+          
+        if (!selfEvalRequired) {
+          return { isValid: false, message: 'Vui lòng hoàn thành tất cả câu hỏi tự đánh giá bản thân' };
+        }
+        
+        // If not single member, check team evaluation too
+        if (!surveyData.isSingleMember) {
+          const teamEvalRequired = surveyData.inTeamEvaluation.ratings
+            .filter(q => q.required)
+            .every(q => q.rating !== null);
+            
+          if (!teamEvalRequired) {
+            return { isValid: false, message: 'Vui lòng hoàn thành tất cả câu hỏi đánh giá team' };
+          }
+        }
+        
+        return { isValid: true };
+        
+      case 2: // Cross Team Evaluation - no required fields
+        return { isValid: true };
+        
+      case 3: // WSZ Evaluation
+        // Check all required rating questions
+        const wszRatingsValid = surveyData.wszTeamEvaluation.ratings
+          .filter(q => q.required)
+          .every(q => q.rating !== null);
+          
+        if (!wszRatingsValid) {
+          return { isValid: false, message: 'Vui lòng hoàn thành tất cả câu hỏi đánh giá bắt buộc' };
+        }
+        
+        // Check all required open questions
+        const wszOpenQuestionsValid = surveyData.wszTeamEvaluation.openQuestions
+          .filter(q => q.required)
+          .every(q => q.answer.trim() !== '');
+          
+        if (!wszOpenQuestionsValid) {
+          return { isValid: false, message: 'Vui lòng trả lời tất cả câu hỏi mở bắt buộc' };
+        }
+        
+        // Check OKR evaluation
+        const okrValid = surveyData.okrEvaluation.ratings
+          .filter(q => q.required)
+          .every(q => q.rating !== null);
+          
+        if (!okrValid) {
+          return { isValid: false, message: 'Vui lòng hoàn thành tất cả câu hỏi đánh giá OKR' };
+        }
+        
+        return { isValid: true };
+        
+      default:
+        return { isValid: true };
+    }
+  };
+
   const nextStep = () => {
-    setCurrentStep(prev => prev + 1);
+    const validation = validateCurrentStep();
+    if (validation.isValid) {
+      setCurrentStep(prev => prev + 1);
+    } else {
+      toast.error(validation.message || 'Vui lòng hoàn thành tất cả trường bắt buộc');
+    }
   };
 
   const prevStep = () => {
@@ -190,7 +281,8 @@ export const SurveyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
     const { 
       selfEvaluation, inTeamEvaluation, 
       devTeamEvaluation, qaTeamEvaluation, baTeamEvaluation, 
-      designTeamEvaluation, contentSeoTeamEvaluation, wszTeamEvaluation 
+      designTeamEvaluation, contentSeoTeamEvaluation, wszTeamEvaluation,
+      okrEvaluation
     } = surveyData;
     
     // Map ratings from each evaluation object to database column format
@@ -259,6 +351,13 @@ export const SurveyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       content_strengths: contentSeoTeamEvaluation.openQuestions[0].answer || null,
       content_improvements: contentSeoTeamEvaluation.openQuestions[1].answer || null,
       
+      // OKR evaluation
+      okr_understanding_rating: okrEvaluation.ratings[0].rating,
+      okr_team_awareness_rating: okrEvaluation.ratings[1].rating,
+      okr_personal_rating: okrEvaluation.ratings[2].rating,
+      okr_process_rating: okrEvaluation.ratings[3].rating,
+      okr_implementation_rating: okrEvaluation.ratings[4].rating,
+      
       // WSZ team evaluation
       wsz_process_rating: wszTeamEvaluation.ratings[0].rating,
       wsz_meetings_rating: wszTeamEvaluation.ratings[1].rating,
@@ -273,6 +372,13 @@ export const SurveyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
   // Function to submit survey data to Supabase
   const submitSurvey = async () => {
     try {
+      // Validate WSZ step first before submission
+      const validation = validateCurrentStep();
+      if (!validation.isValid) {
+        toast.error(validation.message || 'Vui lòng hoàn thành tất cả trường bắt buộc');
+        return;
+      }
+      
       const surveyDataForDb = prepareSurveyData();
       
       const { error } = await supabase
@@ -302,7 +408,8 @@ export const SurveyProvider: React.FC<{ children: React.ReactNode }> = ({ childr
       nextStep,
       prevStep,
       isSubmitted,
-      submitSurvey
+      submitSurvey,
+      validateCurrentStep
     }}>
       {children}
     </SurveyContext.Provider>

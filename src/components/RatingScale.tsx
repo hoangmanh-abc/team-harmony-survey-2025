@@ -6,9 +6,10 @@ interface RatingScaleProps {
   id: string;
   value: number | null;
   onChange: (value: number) => void;
+  hasError?: boolean;
 }
 
-const RatingScale: React.FC<RatingScaleProps> = ({ id, value, onChange }) => {
+const RatingScale: React.FC<RatingScaleProps> = ({ id, value, onChange, hasError = false }) => {
   return (
     <div className="flex justify-between items-center w-full gap-1 md:gap-2">
       {[1, 2, 3, 4, 5].map((rating) => (
@@ -20,7 +21,9 @@ const RatingScale: React.FC<RatingScaleProps> = ({ id, value, onChange }) => {
               "w-8 h-8 md:w-10 md:h-10 rounded-full flex items-center justify-center transition-all",
               value === rating
                 ? "bg-survey-primary text-white"
-                : "bg-gray-100 hover:bg-survey-accent hover:text-survey-primary"
+                : hasError 
+                  ? "bg-red-50 hover:bg-survey-accent hover:text-survey-primary border border-red-300" 
+                  : "bg-gray-100 hover:bg-survey-accent hover:text-survey-primary"
             )}
           >
             {rating}

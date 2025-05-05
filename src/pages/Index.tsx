@@ -10,6 +10,15 @@ const Index = () => {
       <Header />
       
       <main className="flex-1 py-8 container mx-auto">
+        <div className="text-center max-w-4xl mx-auto mb-6">
+          <h2 className="text-2xl font-bold text-survey-primary mb-2">
+            Đánh giá hiệu quả và sự hài lòng với team trong quý 1/2025
+          </h2>
+          <p className="text-gray-600">
+            Cảm ơn bạn đã dành thời gian tham gia khảo sát. Các phần đánh dấu * là bắt buộc.
+          </p>
+        </div>
+        
         <SurveyProvider>
           <SurveyContainer />
         </SurveyProvider>

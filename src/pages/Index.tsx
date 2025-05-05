@@ -26,7 +26,7 @@ const Index = () => {
       
       <footer className="py-4 bg-gray-100 text-center text-sm text-gray-600">
         <div className="container mx-auto">
-          Team Harmony Survey &copy; 2025
+          WSZ Survey &copy; 2025
         </div>
       </footer>
     </div>

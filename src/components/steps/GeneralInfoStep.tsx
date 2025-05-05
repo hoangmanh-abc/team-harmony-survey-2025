@@ -62,12 +62,10 @@ const GeneralInfoStep = () => {
                 <SelectContent>
                   <SelectItem value="DEV">Developer (DEV)</SelectItem>
                   <SelectItem value="BA">Business Analyst (BA)</SelectItem>
-                  <SelectItem value="CONTENT">Content</SelectItem>
+                  <SelectItem value="CONTENT">Content - SEO</SelectItem>
                   <SelectItem value="SEO">SEO</SelectItem>
                   <SelectItem value="DESIGN">Design</SelectItem>
-                  <SelectItem value="QA">Tester (QA)</SelectItem>
-                  <SelectItem value="MKT">Marketing (MKT)</SelectItem>
-                  <SelectItem value="OTHER">Khác</SelectItem>
+                  <SelectItem value="QA">Tester (QA)</SelectItem> 
                 </SelectContent>
               </Select>
             </div>
@@ -77,9 +75,7 @@ const GeneralInfoStep = () => {
             <div className="p-4 bg-survey-light border border-survey-accent rounded-lg">
               <p className="text-sm">
                 <span className="font-medium text-survey-primary">📝 Ghi chú:</span>
-                <br />
-                - Nếu bạn là thành viên duy nhất trong team, vui lòng chọn hộp kiểm ở trên.
-                <br />
+                <br /> 
                 - Khi đánh giá các team khác, dù team đó chỉ có 1 người, hãy đánh giá dựa trên trải nghiệm làm việc thực tế.
               </p>
             </div>

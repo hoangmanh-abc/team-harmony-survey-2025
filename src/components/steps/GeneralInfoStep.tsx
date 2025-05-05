@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useSurvey, TeamType } from '@/contexts/SurveyContext';
 import { Input } from '@/components/ui/input';
@@ -7,36 +6,33 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
-
 const GeneralInfoStep = () => {
-  const { surveyData, setSurveyData, nextStep } = useSurvey();
-  
+  const {
+    surveyData,
+    setSurveyData,
+    nextStep
+  } = useSurvey();
   const handleTeamChange = (value: string) => {
     setSurveyData(prev => ({
       ...prev,
       team: value as TeamType
     }));
   };
-  
   const handleSingleMemberChange = (checked: boolean) => {
     setSurveyData(prev => ({
       ...prev,
       isSingleMember: checked
     }));
   };
-  
   const handleContinue = () => {
     // Validate required team selection
     if (!surveyData.team) {
       alert("Vui lòng chọn team của bạn");
       return;
     }
-    
     nextStep();
   };
-
-  return (
-    <div className="w-full max-w-4xl mx-auto">
+  return <div className="w-full max-w-4xl mx-auto">
       <Card className="border border-survey-accent shadow-lg">
         <CardHeader className="bg-gradient-to-r from-survey-primary to-survey-secondary text-white rounded-t-lg">
           <CardTitle className="text-2xl">Đánh giá hiệu quả và sự hài lòng với team</CardTitle>
@@ -49,13 +45,10 @@ const GeneralInfoStep = () => {
           <div className="space-y-6">
             <div className="space-y-2">
               <Label htmlFor="name">Họ và tên <span className="text-gray-500 text-sm">(Không bắt buộc – bạn có thể chọn ẩn danh)</span></Label>
-              <Input 
-                id="name" 
-                placeholder="Nhập họ và tên (không bắt buộc)"
-                value={surveyData.name}
-                onChange={(e) => setSurveyData(prev => ({ ...prev, name: e.target.value }))}
-                className="border-gray-300"
-              />
+              <Input id="name" placeholder="Nhập họ và tên (không bắt buộc)" value={surveyData.name} onChange={e => setSurveyData(prev => ({
+              ...prev,
+              name: e.target.value
+            }))} className="border-gray-300" />
             </div>
             
             <div className="space-y-2">
@@ -79,21 +72,7 @@ const GeneralInfoStep = () => {
               </Select>
             </div>
             
-            <div className="flex items-start space-x-2">
-              <Checkbox 
-                id="isSingleMember" 
-                checked={surveyData.isSingleMember}
-                onCheckedChange={handleSingleMemberChange}
-              />
-              <div className="grid gap-1.5 leading-none">
-                <Label htmlFor="isSingleMember">
-                  Tôi là thành viên duy nhất trong team của tôi
-                </Label>
-                <p className="text-sm text-gray-500">
-                  (Bạn sẽ chuyển sang phần tự đánh giá bản thân)
-                </p>
-              </div>
-            </div>
+            
             
             <div className="p-4 bg-survey-light border border-survey-accent rounded-lg">
               <p className="text-sm">
@@ -107,17 +86,12 @@ const GeneralInfoStep = () => {
           </div>
           
           <div className="mt-8 flex justify-end">
-            <Button 
-              onClick={handleContinue} 
-              className="bg-survey-primary hover:bg-survey-dark text-white px-8"
-            >
+            <Button onClick={handleContinue} className="bg-survey-primary hover:bg-survey-dark text-white px-8">
               Tiếp theo
             </Button>
           </div>
         </CardContent>
       </Card>
-    </div>
-  );
+    </div>;
 };
-
 export default GeneralInfoStep;

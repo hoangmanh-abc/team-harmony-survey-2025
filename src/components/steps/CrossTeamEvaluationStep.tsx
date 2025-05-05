@@ -107,6 +107,7 @@ const CrossTeamEvaluationStep = () => {
             setShowValidation(false);
             window.scrollTo({ top: 0, behavior: "smooth" });
         } else {
+            window.scrollTo({ top: 0, behavior: "smooth" });
             nextStep();
         }
     };
@@ -118,6 +119,7 @@ const CrossTeamEvaluationStep = () => {
             setShowValidation(false);
             window.scrollTo({ top: 0, behavior: "smooth" });
         } else {
+            window.scrollTo({ top: 0, behavior: "smooth" });
             prevStep();
         }
     };

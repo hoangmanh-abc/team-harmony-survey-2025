@@ -13,6 +13,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import TeamEvaluationSection from "@/components/TeamEvaluationSection";
 import { Info } from "lucide-react";
 import { ConfigTeam } from "@/data/initialSurveyData";
+import { toast } from "sonner";
 
 const CrossTeamEvaluationStep = () => {
     const {
@@ -23,47 +24,8 @@ const CrossTeamEvaluationStep = () => {
         validateCurrentStep,
     } = useSurvey();
     const otherTeam = ConfigTeam.filter((team) => team.id !== surveyData.team);
-    const [activeTab, setActiveTab] = useState(otherTeam[0].id);
+    const [currentTeamIndex, setCurrentTeamIndex] = useState(0);
     const [showValidation, setShowValidation] = useState(false);
-
-    // Update rating for a specific team
-    const updateRating = (
-        team: keyof typeof teamData,
-        questionId: string,
-        rating: number
-    ) => {
-        setSurveyData((prev) => ({
-            ...prev,
-            [team]: {
-                ...prev[team],
-                ratings: prev[team].ratings.map((q) =>
-                    q.id === questionId ? { ...q, rating } : q
-                ),
-            },
-        }));
-    };
-
-    // Update open answer for a specific team
-    const updateOpenAnswer = (
-        team: keyof typeof teamData,
-        questionId: string,
-        answer: string
-    ) => {
-        setSurveyData((prev) => ({
-            ...prev,
-            [team]: {
-                ...prev[team],
-                openQuestions: prev[team].openQuestions.map((q) =>
-                    q.id === questionId ? { ...q, answer } : q
-                ),
-            },
-        }));
-    };
-
-    const handleContinue = () => {
-        // Cross-team evaluations are optional, so we don't need to validate
-        nextStep();
-    };
 
     // Map team keys to their evaluation data and titles
     const teamData = {
@@ -89,6 +51,77 @@ const CrossTeamEvaluationStep = () => {
         },
     };
 
+    // Lấy key team hiện tại
+    const teamId = otherTeam[currentTeamIndex]?.id;
+    const teamKey = (() => {
+        switch (teamId) {
+            case "DEV":
+                return "devTeamEvaluation";
+            case "QA":
+                return "qaTeamEvaluation";
+            case "BA":
+                return "baTeamEvaluation";
+            case "DESIGN":
+                return "designTeamEvaluation";
+            case "CONTENT_SEO":
+                return "contentSeoTeamEvaluation";
+            default:
+                return "";
+        }
+    })();
+
+    // Nếu không còn team nào (lỗi cấu hình)
+    if (!teamKey) return null;
+
+    // Update rating cho team hiện tại
+    const updateRating = (questionId: string, rating: number) => {
+        setSurveyData((prev) => ({
+            ...prev,
+            [teamKey]: {
+                ...prev[teamKey],
+                ratings: prev[teamKey].ratings.map((q) =>
+                    q.id === questionId ? { ...q, rating } : q
+                ),
+            },
+        }));
+    };
+
+    // Update open answer cho team hiện tại
+    const updateOpenAnswer = (questionId: string, answer: string) => {
+        setSurveyData((prev) => ({
+            ...prev,
+            [teamKey]: {
+                ...prev[teamKey],
+                openQuestions: prev[teamKey].openQuestions.map((q) =>
+                    q.id === questionId ? { ...q, answer } : q
+                ),
+            },
+        }));
+    };
+
+    // Xử lý nút tiếp theo
+    const handleContinue = () => {
+        // Có thể thêm validate nếu muốn
+        if (currentTeamIndex < otherTeam.length - 1) {
+            setCurrentTeamIndex(currentTeamIndex + 1);
+            setShowValidation(false);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        } else {
+            nextStep();
+        }
+    };
+
+    // Xử lý nút quay lại
+    const handleBack = () => {
+        if (currentTeamIndex > 0) {
+            setCurrentTeamIndex(currentTeamIndex - 1);
+            setShowValidation(false);
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        } else {
+            prevStep();
+        }
+    };
+
     return (
         <div className="w-full max-w-4xl mx-auto">
             <Card className="border border-survey-accent shadow-lg">
@@ -97,157 +130,46 @@ const CrossTeamEvaluationStep = () => {
                         III. Đánh giá các team khác (cross-team)
                     </CardTitle>
                     <CardDescription className="text-white/80">
-                        Đánh giá các team bạn đã làm việc cùng
+                        Đánh giá các team bạn đã làm việc cùng, bỏ qua nếu không
+                        làm việc cùng
                     </CardDescription>
                 </CardHeader>
 
                 <CardContent className="pt-6">
-                    <div className="bg-blue-50 p-4 rounded-md flex items-start gap-3 mb-4">
+                    {/* <div className="bg-blue-50 p-4 rounded-md flex items-start gap-3 mb-4">
                         <Info
                             className="text-blue-500 mt-1 flex-shrink-0"
                             size={18}
                         />
                         <p className="text-blue-700 text-sm">
-                            Vui lòng đánh giá các team mà bạn đã làm việc cùng.
-                            Nếu bạn chưa từng làm việc với team nào đó, bạn có
-                            thể bỏ qua.
+                            {`Team ${
+                                otherTeam[currentTeamIndex]?.name
+                            }: Vui lòng đánh giá team này. (${
+                                currentTeamIndex + 1
+                            }/${otherTeam.length})`}
                         </p>
-                    </div>
-
-                    <Tabs value={activeTab} onValueChange={setActiveTab}>
-                        <TabsList className="w-full grid grid-cols-5">
-                            {ConfigTeam.filter(
-                                (team) => team.id !== surveyData.team
-                            ).map((team) => (
-                                <TabsTrigger key={team.id} value={team.id}>
-                                    {team.shortName}
-                                </TabsTrigger>
-                            ))}
-                        </TabsList>
-
-                        <TabsContent value={"DEV"}>
-                            <TeamEvaluationSection
-                                title={teamData.devTeamEvaluation.title}
-                                evaluation={teamData.devTeamEvaluation.data}
-                                updateRating={(questionId, rating) =>
-                                    updateRating(
-                                        "devTeamEvaluation",
-                                        questionId,
-                                        rating
-                                    )
-                                }
-                                updateOpenAnswer={(questionId, answer) =>
-                                    updateOpenAnswer(
-                                        "devTeamEvaluation",
-                                        questionId,
-                                        answer
-                                    )
-                                }
-                                className="mt-4"
-                            />
-                        </TabsContent>
-
-                        <TabsContent value="QA">
-                            <TeamEvaluationSection
-                                title={teamData.qaTeamEvaluation.title}
-                                evaluation={teamData.qaTeamEvaluation.data}
-                                updateRating={(questionId, rating) =>
-                                    updateRating(
-                                        "qaTeamEvaluation",
-                                        questionId,
-                                        rating
-                                    )
-                                }
-                                updateOpenAnswer={(questionId, answer) =>
-                                    updateOpenAnswer(
-                                        "qaTeamEvaluation",
-                                        questionId,
-                                        answer
-                                    )
-                                }
-                                className="mt-4"
-                            />
-                        </TabsContent>
-
-                        <TabsContent value="BA">
-                            <TeamEvaluationSection
-                                title={teamData.baTeamEvaluation.title}
-                                evaluation={teamData.baTeamEvaluation.data}
-                                updateRating={(questionId, rating) =>
-                                    updateRating(
-                                        "baTeamEvaluation",
-                                        questionId,
-                                        rating
-                                    )
-                                }
-                                updateOpenAnswer={(questionId, answer) =>
-                                    updateOpenAnswer(
-                                        "baTeamEvaluation",
-                                        questionId,
-                                        answer
-                                    )
-                                }
-                                className="mt-4"
-                            />
-                        </TabsContent>
-
-                        <TabsContent value="DESIGN">
-                            <TeamEvaluationSection
-                                title={teamData.designTeamEvaluation.title}
-                                evaluation={teamData.designTeamEvaluation.data}
-                                updateRating={(questionId, rating) =>
-                                    updateRating(
-                                        "designTeamEvaluation",
-                                        questionId,
-                                        rating
-                                    )
-                                }
-                                updateOpenAnswer={(questionId, answer) =>
-                                    updateOpenAnswer(
-                                        "designTeamEvaluation",
-                                        questionId,
-                                        answer
-                                    )
-                                }
-                                className="mt-4"
-                            />
-                        </TabsContent>
-
-                        <TabsContent value="CONTENT_SEO">
-                            <TeamEvaluationSection
-                                title={teamData.contentSeoTeamEvaluation.title}
-                                evaluation={
-                                    teamData.contentSeoTeamEvaluation.data
-                                }
-                                updateRating={(questionId, rating) =>
-                                    updateRating(
-                                        "contentSeoTeamEvaluation",
-                                        questionId,
-                                        rating
-                                    )
-                                }
-                                updateOpenAnswer={(questionId, answer) =>
-                                    updateOpenAnswer(
-                                        "contentSeoTeamEvaluation",
-                                        questionId,
-                                        answer
-                                    )
-                                }
-                                className="mt-4"
-                            />
-                        </TabsContent>
-                    </Tabs>
+                    </div> */}
+                    <TeamEvaluationSection
+                        title={teamData[teamKey].title}
+                        evaluation={teamData[teamKey].data}
+                        updateRating={updateRating}
+                        updateOpenAnswer={updateOpenAnswer}
+                        showValidation={showValidation}
+                        className="mt-4"
+                    />
                 </CardContent>
 
                 <CardFooter className="flex justify-between">
-                    <Button variant="outline" onClick={prevStep}>
-                        Quay lại
+                    <Button variant="outline" onClick={handleBack}>
+                        {currentTeamIndex === 0 ? "Quay lại" : "Trước"}
                     </Button>
                     <Button
                         onClick={handleContinue}
                         className="bg-survey-primary hover:bg-survey-dark text-white"
                     >
-                        Tiếp theo
+                        {currentTeamIndex === otherTeam.length - 1
+                            ? "Tiếp theo"
+                            : "Tiếp tục"}
                     </Button>
                 </CardFooter>
             </Card>

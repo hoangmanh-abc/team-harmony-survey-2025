@@ -38,7 +38,7 @@ export const initialSurveyData: SurveyData = {
     name: "",
     team: "",
     isSingleMember: false,
-
+    visitedTabs: [],
     // Self evaluation (for single members)
     selfEvaluation: {
         ratings: [

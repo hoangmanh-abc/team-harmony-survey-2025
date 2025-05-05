@@ -71,6 +71,7 @@ const InTeamEvaluationStep = () => {
 
         if (validation.isValid) {
             nextStep();
+            window.scrollTo({ top: 0, behavior: "smooth" });
             setShowValidation(false);
         } else {
             toast.error(

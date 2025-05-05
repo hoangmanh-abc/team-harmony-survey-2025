@@ -41,6 +41,7 @@ const GeneralInfoStep = () => {
             alert("Vui lòng chọn team của bạn");
             return;
         }
+        window.scrollTo({ top: 0, behavior: "smooth" });
         nextStep();
     };
     return (

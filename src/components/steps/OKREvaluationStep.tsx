@@ -53,6 +53,7 @@ const OKREvaluationStep = () => {
         if (validation.isValid) {
             nextStep();
             setShowValidation(false);
+            window.scrollTo({ top: 0, behavior: "smooth" });
         } else {
             toast.error(
                 validation.message ||

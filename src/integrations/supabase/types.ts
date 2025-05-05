@@ -9,7 +9,189 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      survey_responses: {
+        Row: {
+          ba_clarity_rating: number | null
+          ba_collaboration_rating: number | null
+          ba_documentation_rating: number | null
+          ba_improvements: string | null
+          ba_response_rating: number | null
+          ba_satisfaction_rating: number | null
+          ba_strengths: string | null
+          content_collaboration_rating: number | null
+          content_improvements: string | null
+          content_quality_rating: number | null
+          content_response_rating: number | null
+          content_satisfaction_rating: number | null
+          content_strengths: string | null
+          created_at: string | null
+          design_communication_rating: number | null
+          design_creativity_rating: number | null
+          design_delivery_rating: number | null
+          design_improvements: string | null
+          design_requirements_rating: number | null
+          design_satisfaction_rating: number | null
+          design_strengths: string | null
+          dev_improvements: string | null
+          dev_proactive_rating: number | null
+          dev_requirements_rating: number | null
+          dev_satisfaction_rating: number | null
+          dev_solutions_rating: number | null
+          dev_strengths: string | null
+          dev_support_rating: number | null
+          id: string
+          inteam_clarity_rating: number | null
+          inteam_growth_rating: number | null
+          inteam_improvements: string | null
+          inteam_respect_rating: number | null
+          inteam_satisfaction_rating: number | null
+          inteam_strengths: string | null
+          inteam_support_rating: number | null
+          is_single_member: boolean | null
+          name: string | null
+          qa_collaboration_rating: number | null
+          qa_communication_rating: number | null
+          qa_improvements: string | null
+          qa_satisfaction_rating: number | null
+          qa_strengths: string | null
+          qa_testing_rating: number | null
+          qa_timing_rating: number | null
+          self_collaboration_rating: number | null
+          self_improvement_rating: number | null
+          self_proactive_rating: number | null
+          self_satisfaction_rating: number | null
+          self_timely_response_rating: number | null
+          team: Database["public"]["Enums"]["team_type"] | null
+          wsz_goals_rating: number | null
+          wsz_meetings_rating: number | null
+          wsz_next_quarter_changes: string | null
+          wsz_process_improvements: string | null
+          wsz_process_rating: number | null
+          wsz_product_understanding_rating: number | null
+          wsz_satisfaction_rating: number | null
+        }
+        Insert: {
+          ba_clarity_rating?: number | null
+          ba_collaboration_rating?: number | null
+          ba_documentation_rating?: number | null
+          ba_improvements?: string | null
+          ba_response_rating?: number | null
+          ba_satisfaction_rating?: number | null
+          ba_strengths?: string | null
+          content_collaboration_rating?: number | null
+          content_improvements?: string | null
+          content_quality_rating?: number | null
+          content_response_rating?: number | null
+          content_satisfaction_rating?: number | null
+          content_strengths?: string | null
+          created_at?: string | null
+          design_communication_rating?: number | null
+          design_creativity_rating?: number | null
+          design_delivery_rating?: number | null
+          design_improvements?: string | null
+          design_requirements_rating?: number | null
+          design_satisfaction_rating?: number | null
+          design_strengths?: string | null
+          dev_improvements?: string | null
+          dev_proactive_rating?: number | null
+          dev_requirements_rating?: number | null
+          dev_satisfaction_rating?: number | null
+          dev_solutions_rating?: number | null
+          dev_strengths?: string | null
+          dev_support_rating?: number | null
+          id?: string
+          inteam_clarity_rating?: number | null
+          inteam_growth_rating?: number | null
+          inteam_improvements?: string | null
+          inteam_respect_rating?: number | null
+          inteam_satisfaction_rating?: number | null
+          inteam_strengths?: string | null
+          inteam_support_rating?: number | null
+          is_single_member?: boolean | null
+          name?: string | null
+          qa_collaboration_rating?: number | null
+          qa_communication_rating?: number | null
+          qa_improvements?: string | null
+          qa_satisfaction_rating?: number | null
+          qa_strengths?: string | null
+          qa_testing_rating?: number | null
+          qa_timing_rating?: number | null
+          self_collaboration_rating?: number | null
+          self_improvement_rating?: number | null
+          self_proactive_rating?: number | null
+          self_satisfaction_rating?: number | null
+          self_timely_response_rating?: number | null
+          team?: Database["public"]["Enums"]["team_type"] | null
+          wsz_goals_rating?: number | null
+          wsz_meetings_rating?: number | null
+          wsz_next_quarter_changes?: string | null
+          wsz_process_improvements?: string | null
+          wsz_process_rating?: number | null
+          wsz_product_understanding_rating?: number | null
+          wsz_satisfaction_rating?: number | null
+        }
+        Update: {
+          ba_clarity_rating?: number | null
+          ba_collaboration_rating?: number | null
+          ba_documentation_rating?: number | null
+          ba_improvements?: string | null
+          ba_response_rating?: number | null
+          ba_satisfaction_rating?: number | null
+          ba_strengths?: string | null
+          content_collaboration_rating?: number | null
+          content_improvements?: string | null
+          content_quality_rating?: number | null
+          content_response_rating?: number | null
+          content_satisfaction_rating?: number | null
+          content_strengths?: string | null
+          created_at?: string | null
+          design_communication_rating?: number | null
+          design_creativity_rating?: number | null
+          design_delivery_rating?: number | null
+          design_improvements?: string | null
+          design_requirements_rating?: number | null
+          design_satisfaction_rating?: number | null
+          design_strengths?: string | null
+          dev_improvements?: string | null
+          dev_proactive_rating?: number | null
+          dev_requirements_rating?: number | null
+          dev_satisfaction_rating?: number | null
+          dev_solutions_rating?: number | null
+          dev_strengths?: string | null
+          dev_support_rating?: number | null
+          id?: string
+          inteam_clarity_rating?: number | null
+          inteam_growth_rating?: number | null
+          inteam_improvements?: string | null
+          inteam_respect_rating?: number | null
+          inteam_satisfaction_rating?: number | null
+          inteam_strengths?: string | null
+          inteam_support_rating?: number | null
+          is_single_member?: boolean | null
+          name?: string | null
+          qa_collaboration_rating?: number | null
+          qa_communication_rating?: number | null
+          qa_improvements?: string | null
+          qa_satisfaction_rating?: number | null
+          qa_strengths?: string | null
+          qa_testing_rating?: number | null
+          qa_timing_rating?: number | null
+          self_collaboration_rating?: number | null
+          self_improvement_rating?: number | null
+          self_proactive_rating?: number | null
+          self_satisfaction_rating?: number | null
+          self_timely_response_rating?: number | null
+          team?: Database["public"]["Enums"]["team_type"] | null
+          wsz_goals_rating?: number | null
+          wsz_meetings_rating?: number | null
+          wsz_next_quarter_changes?: string | null
+          wsz_process_improvements?: string | null
+          wsz_process_rating?: number | null
+          wsz_product_understanding_rating?: number | null
+          wsz_satisfaction_rating?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
@@ -18,7 +200,15 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      team_type:
+        | "DEV"
+        | "BA"
+        | "CONTENT"
+        | "SEO"
+        | "DESIGN"
+        | "QA"
+        | "MKT"
+        | "OTHER"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +323,17 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      team_type: [
+        "DEV",
+        "BA",
+        "CONTENT",
+        "SEO",
+        "DESIGN",
+        "QA",
+        "MKT",
+        "OTHER",
+      ],
+    },
   },
 } as const

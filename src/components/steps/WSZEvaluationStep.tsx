@@ -33,7 +33,7 @@ const WSZEvaluationStep = () => {
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     // Check if at least one rating is provided
     const hasAnyRating = surveyData.wszTeamEvaluation.ratings.some(q => q.rating !== null);
     
@@ -42,8 +42,7 @@ const WSZEvaluationStep = () => {
       return;
     }
     
-    submitSurvey();
-    toast.success("Cảm ơn bạn đã hoàn thành khảo sát!");
+    await submitSurvey();
   };
 
   return (

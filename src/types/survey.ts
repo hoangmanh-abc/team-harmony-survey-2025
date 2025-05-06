@@ -1,3 +1,4 @@
+
 export type TeamType =
     | "DEV"
     | "BA"
@@ -54,4 +55,6 @@ export interface SurveyContextType {
     isSubmitted: boolean;
     submitSurvey: () => Promise<void>;
     validateCurrentStep: () => { isValid: boolean; message?: string };
+    resetSurvey: () => void;
+    existingResponseId: string | null;
 }

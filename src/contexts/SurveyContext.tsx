@@ -1,8 +1,8 @@
 
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
-import { SurveyContextType, SurveyData } from '@/types/survey';
+import { SurveyContextType, SurveyData, TeamType, TeamEvaluation } from '@/types/survey';
 import { initialSurveyData } from '@/data/initialSurveyData';
 import { validateCurrentStep as validateStep, prepareSurveyData } from '@/utils/surveyHelpers';
 
@@ -87,4 +87,4 @@ export const useSurvey = () => {
 };
 
 // Re-export types for easier imports
-export type { TeamType } from '@/types/survey';
+export type { TeamType, TeamEvaluation } from '@/types/survey';

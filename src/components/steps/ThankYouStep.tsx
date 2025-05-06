@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { useSurvey } from '@/contexts/SurveyContext';
 import { Button } from '@/components/ui/button';
@@ -6,17 +5,11 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/componen
 import { CheckCircle } from 'lucide-react';
 
 const ThankYouStep = () => {
-  const { setCurrentStep, setSurveyData } = useSurvey();
+  const { resetSurvey, existingResponseId } = useSurvey();
 
   const handleRestartSurvey = () => {
-    // Reset survey to initial state
-    setCurrentStep(0);
-    setSurveyData(prev => ({
-      ...prev,
-      name: '',
-      team: '',
-      isSingleMember: false,
-    }));
+    // Use the resetSurvey function which will keep the existingResponseId
+    resetSurvey();
   };
 
   return (
@@ -32,7 +25,9 @@ const ThankYouStep = () => {
           </div>
           
           <h2 className="text-xl font-bold text-survey-primary mb-2">
-            Khảo sát đã được ghi nhận
+            {existingResponseId 
+              ? "Khảo sát đã được cập nhật thành công"
+              : "Khảo sát đã được ghi nhận"}
           </h2>
           
           <p className="text-gray-600 mb-6">
@@ -52,7 +47,7 @@ const ThankYouStep = () => {
             variant="outline"
             className="border-survey-primary text-survey-primary hover:bg-survey-light"
           >
-            Làm lại khảo sát
+            {existingResponseId ? 'Chỉnh sửa khảo sát' : 'Làm lại khảo sát'}
           </Button>
         </CardFooter>
       </Card>

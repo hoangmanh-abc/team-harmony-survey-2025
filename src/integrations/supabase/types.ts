@@ -49,6 +49,11 @@ export type Database = {
           inteam_support_rating: number | null
           is_single_member: boolean | null
           name: string | null
+          okr_implementation_rating: number | null
+          okr_personal_rating: number | null
+          okr_process_rating: number | null
+          okr_team_awareness_rating: number | null
+          okr_understanding_rating: number | null
           qa_collaboration_rating: number | null
           qa_communication_rating: number | null
           qa_improvements: string | null
@@ -109,6 +114,11 @@ export type Database = {
           inteam_support_rating?: number | null
           is_single_member?: boolean | null
           name?: string | null
+          okr_implementation_rating?: number | null
+          okr_personal_rating?: number | null
+          okr_process_rating?: number | null
+          okr_team_awareness_rating?: number | null
+          okr_understanding_rating?: number | null
           qa_collaboration_rating?: number | null
           qa_communication_rating?: number | null
           qa_improvements?: string | null
@@ -169,6 +179,11 @@ export type Database = {
           inteam_support_rating?: number | null
           is_single_member?: boolean | null
           name?: string | null
+          okr_implementation_rating?: number | null
+          okr_personal_rating?: number | null
+          okr_process_rating?: number | null
+          okr_team_awareness_rating?: number | null
+          okr_understanding_rating?: number | null
           qa_collaboration_rating?: number | null
           qa_communication_rating?: number | null
           qa_improvements?: string | null
@@ -203,7 +218,7 @@ export type Database = {
       team_type:
         | "DEV"
         | "BA"
-        | "CONTENT"
+        | "CONTENT_SEO"
         | "SEO"
         | "DESIGN"
         | "QA"
@@ -327,7 +342,7 @@ export const Constants = {
       team_type: [
         "DEV",
         "BA",
-        "CONTENT",
+        "CONTENT_SEO",
         "SEO",
         "DESIGN",
         "QA",
